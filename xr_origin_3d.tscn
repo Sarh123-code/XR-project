@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://cs84qhhybe7i2"]
+
+[ext_resource type="Script" uid="uid://clldqdfy21c2o" path="res://xr_origin_3d.gd" id="1_vwqiv"]
+[ext_resource type="Script" uid="uid://b6o815sybvovd" path="res://left_hand.gd" id="2_ojcpv"]
+[ext_resource type="Script" uid="uid://b7im2x5ypof3m" path="res://right_hand.gd" id="3_2nlyf"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xvlyh"]
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_xvlyh"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dfbf8"]
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_dfbf8"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ojcpv"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xvlyh"]
+material = SubResource("StandardMaterial3D_ojcpv")
+top_radius = 0.02
+bottom_radius = 0.02
+height = 10.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_myomt"]
+radius = 0.07
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_66i10"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xvlyh"]
+height = 1.7
+
+[node name="XROrigin3D" type="XROrigin3D" unique_id=718858443]
+script = ExtResource("1_vwqiv")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=421551671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="LeftHand" type="XRController3D" parent="." unique_id=350106471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
+tracker = &"left_hand"
+script = ExtResource("2_ojcpv")
+
+[node name="Area3D" type="Area3D" parent="LeftHand" unique_id=729086377]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftHand/Area3D" unique_id=156389227]
+shape = SubResource("SphereShape3D_xvlyh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LeftHand/Area3D" unique_id=2039586037]
+mesh = SubResource("SphereMesh_xvlyh")
+
+[node name="RightHand" type="XRController3D" parent="." unique_id=2018949157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -0.5)
+tracker = &"right_hand"
+script = ExtResource("3_2nlyf")
+
+[node name="Area3D" type="Area3D" parent="RightHand" unique_id=165968419]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightHand/Area3D" unique_id=1990719145]
+shape = SubResource("SphereShape3D_dfbf8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightHand/Area3D" unique_id=531190522]
+mesh = SubResource("SphereMesh_dfbf8")
+
+[node name="RayCast3D" type="RayCast3D" parent="RightHand/Area3D" unique_id=1944769503]
+visible = false
+target_position = Vector3(0, 0, -10)
+collision_mask = 4
+collide_with_areas = true
+debug_shape_custom_color = Color(0, 1, 0, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightHand/Area3D/RayCast3D" unique_id=606527258]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.015049934, 0.0024311543, -5.0441675)
+mesh = SubResource("CylinderMesh_xvlyh")
+
+[node name="Collision" type="MeshInstance3D" parent="RightHand/Area3D/RayCast3D" unique_id=4543547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6473626)
+mesh = SubResource("SphereMesh_myomt")
+surface_material_override/0 = SubResource("StandardMaterial3D_66i10")
+
+[node name="Body" type="Area3D" parent="." unique_id=1122449033]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body" unique_id=800155486]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_xvlyh")
+
+[connection signal="button_pressed" from="RightHand" to="RightHand" method="_on_button_pressed"]
+[connection signal="button_released" from="RightHand" to="RightHand" method="_on_button_released"]
